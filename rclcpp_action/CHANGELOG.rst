@@ -2,6 +2,10 @@
 Changelog for package rclcpp_action
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix: Fixed expiring of goals if events executor is used (`#2674 <https://github.com/ros2/rclcpp/issues/2674>`_)
+* Contributors: Janosch Machowinski
 
 16.0.18 (2026-02-09)
 --------------------
