@@ -106,18 +106,32 @@ Node::create_subscription(
 }
 
 template<typename DurationRepT, typename DurationT, typename CallbackT>
-typename rclcpp::WallTimer<CallbackT>::SharedPtr
+typename rclcpp::GenericTimer<CallbackT>::SharedPtr
 Node::create_wall_timer(
   std::chrono::duration<DurationRepT, DurationT> period,
   CallbackT callback,
   rclcpp::CallbackGroup::SharedPtr group)
 {
-  return rclcpp::create_wall_timer(
-    period,
+  // rslcpp: use the node's clock (sim time) instead of wall clock (RCL_STEADY_TIME)
+  auto timer = rclcpp::GenericTimer<CallbackT>::make_shared(
+    this->get_clock(),
+    std::chrono::duration_cast<std::chrono::nanoseconds>(period),
     std::move(callback),
-    group,
-    this->node_base_.get(),
-    this->node_timers_.get());
+    this->node_base_->get_context());
+  this->node_timers_->add_timer(timer, group);
+  return timer;
+}
+
+template<typename DurationRepT, typename DurationT, typename CallbackT>
+typename rclcpp::GenericTimer<CallbackT>::SharedPtr
+Node::create_timer(
+  std::chrono::duration<DurationRepT, DurationT> period,
+  CallbackT callback,
+  rclcpp::CallbackGroup::SharedPtr group)
+{
+  // rslcpp: Jazzy API compatibility shim — delegates to create_wall_timer
+  // which already uses the node's clock (sim time)
+  return this->create_wall_timer(period, std::move(callback), group);
 }
 
 template<typename ServiceT>

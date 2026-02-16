@@ -136,6 +136,9 @@ private:
     const rmw_serialized_message_t & serialized_message,
     void * deserialized_msg);
   void publish_loaned_message(void * loaned_message);
+
+  rslcpp::time_delay::CallbackBackend & callback_backend_ = rslcpp::time_delay::CallbackBackend::getInstance();
+  rslcpp::time_delay::DelayBackend & delay_backend_ = rslcpp::time_delay::DelayBackend::getInstance();
 };
 
 }  // namespace rclcpp

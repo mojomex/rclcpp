@@ -218,6 +218,7 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
   for (size_t i = 0; i < wait_set_.size_of_subscriptions; ++i) {
     if (i < entities_collector_->get_number_of_subscriptions()) {
       if (wait_set_.subscriptions[i]) {
+        time_delay_backend_.register_callback_start();
         execute_subscription(entities_collector_->get_subscription(i));
         if (spin_once) {
           return true;
@@ -231,7 +232,9 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
     if (i < entities_collector_->get_number_of_timers()) {
       if (wait_set_.timers[i] && entities_collector_->get_timer(i)->is_ready()) {
         auto timer = entities_collector_->get_timer(i);
+        time_delay_backend_.register_callback_start();
         timer->call();
+        time_delay_backend_.register_callback_start();
         execute_timer(std::move(timer));
         if (spin_once) {
           return true;
@@ -244,6 +247,7 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
   for (size_t i = 0; i < wait_set_.size_of_services; ++i) {
     if (i < entities_collector_->get_number_of_services()) {
       if (wait_set_.services[i]) {
+        time_delay_backend_.register_callback_start();
         execute_service(entities_collector_->get_service(i));
         if (spin_once) {
           return true;
@@ -256,6 +260,7 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
   for (size_t i = 0; i < wait_set_.size_of_clients; ++i) {
     if (i < entities_collector_->get_number_of_clients()) {
       if (wait_set_.clients[i]) {
+        time_delay_backend_.register_callback_start();
         execute_client(entities_collector_->get_client(i));
         if (spin_once) {
           return true;
@@ -269,6 +274,7 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
     auto waitable = entities_collector_->get_waitable(i);
     if (waitable->is_ready(&wait_set_)) {
       auto data = waitable->take_data();
+      time_delay_backend_.register_callback_start();
       waitable->execute(data);
       if (spin_once) {
         return true;

@@ -167,4 +167,9 @@
 #include "rclcpp/waitable.hpp"
 #include "rclcpp/wait_set.hpp"
 
+#include "rclcpp/experimental/executors/events_executor/events_executor.hpp"
+#include "rclcpp/experimental/executors/events_executor/simple_events_queue.hpp"
+
+#define RSLCPP__CUSTOM__RCLCPP
+
 #endif  // RCLCPP__RCLCPP_HPP_

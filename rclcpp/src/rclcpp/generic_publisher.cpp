@@ -18,21 +18,25 @@
 #include <memory>
 #include <string>
 
+
 namespace rclcpp
 {
 
 void GenericPublisher::publish(const rclcpp::SerializedMessage & message)
 {
-  auto return_code = rcl_publish_serialized_message(
-    get_publisher_handle().get(), &message.get_rcl_serialized_message(), NULL);
+  callback_backend_.add_delayed_callable(rslcpp::time_delay::DelayedCallable(delay_backend_.get_delay(this->get_topic_name()), [this, message]() mutable {
+    auto return_code = rcl_publish_serialized_message(
+      get_publisher_handle().get(), &message.get_rcl_serialized_message(), NULL);
 
-  if (return_code != RCL_RET_OK) {
-    rclcpp::exceptions::throw_from_rcl_error(return_code, "failed to publish serialized message");
-  }
+    if (return_code != RCL_RET_OK) {
+      rclcpp::exceptions::throw_from_rcl_error(return_code, "failed to publish serialized message");
+    }
+  }));
 }
 
 void GenericPublisher::publish_as_loaned_msg(const rclcpp::SerializedMessage & message)
 {
+  rslcpp::exceptions::UnsupportedTimeDelayFeature(std::string("Publishing a loaned message with time delay is not supported by rslcpp. Publisher: ") + this->get_topic_name());
   auto loaned_message = borrow_loaned_message();
   deserialize_message(message.get_rcl_serialized_message(), loaned_message);
   publish_loaned_message(loaned_message);
@@ -68,6 +72,7 @@ void GenericPublisher::deserialize_message(
 
 void GenericPublisher::publish_loaned_message(void * loaned_message)
 {
+  rslcpp::exceptions::UnsupportedTimeDelayFeature(std::string("Publishing a loaned message with time delay is not supported by rslcpp. Publisher: ") + this->get_topic_name());
   auto return_code = rcl_publish_loaned_message(
     get_publisher_handle().get(), loaned_message, NULL);
 

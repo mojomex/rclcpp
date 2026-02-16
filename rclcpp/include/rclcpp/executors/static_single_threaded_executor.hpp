@@ -34,6 +34,8 @@
 #include "rclcpp/utilities.hpp"
 #include "rclcpp/visibility_control.hpp"
 
+#include "rslcpp_time_delay_backend/delay_backend.hpp"
+
 namespace rclcpp
 {
 namespace executors
@@ -215,6 +217,7 @@ private:
   RCLCPP_DISABLE_COPY(StaticSingleThreadedExecutor)
 
   StaticExecutorEntitiesCollector::SharedPtr entities_collector_;
+  rslcpp::time_delay::DelayBackend & time_delay_backend_ = rslcpp::time_delay::DelayBackend::getInstance();
 };
 
 }  // namespace executors

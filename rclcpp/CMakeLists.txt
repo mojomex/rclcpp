@@ -20,6 +20,8 @@ find_package(rosidl_typesupport_c REQUIRED)
 find_package(rosidl_typesupport_cpp REQUIRED)
 find_package(statistics_msgs REQUIRED)
 find_package(tracetools REQUIRED)
+find_package(rslcpp_time_delay_backend REQUIRED)
+find_package(rslcpp_exceptions REQUIRED)
 
 # TODO(wjwwood): remove this when gtest can build on its own, when using target_compile_features()
 # Default to C++17
@@ -204,6 +206,8 @@ ament_target_dependencies(${PROJECT_NAME}
   "rosidl_runtime_cpp"
   "statistics_msgs"
   "tracetools"
+  "rslcpp_time_delay_backend"
+  "rslcpp_exceptions"
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
@@ -239,6 +243,8 @@ ament_export_dependencies(rosidl_runtime_cpp)
 ament_export_dependencies(rcl_yaml_param_parser)
 ament_export_dependencies(statistics_msgs)
 ament_export_dependencies(tracetools)
+ament_export_dependencies(rslcpp_time_delay_backend)
+ament_export_dependencies(rslcpp_exceptions)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -37,6 +37,8 @@
   <depend>rmw</depend>
   <depend>statistics_msgs</depend>
   <depend>tracetools</depend>
+  <depend>rslcpp_time_delay_backend</depend>
+  <depend>rslcpp_exceptions</depend>
 
   <test_depend>ament_cmake_gmock</test_depend>
   <test_depend>ament_cmake_google_benchmark</test_depend>
